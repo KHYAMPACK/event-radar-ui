@@ -48,7 +48,12 @@ export function CalendarScreen({ savedEvents, clubs, onNavigate, onEventClick, d
       </header>
 
       <main className="px-6 pt-6">
-        <CalendarGrid savedEvents={savedEvents} onDayClick={handleDayClick} darkMode={darkMode} />
+        <CalendarGrid
+          savedEvents={savedEvents}
+          clubs={clubs}
+          onDayClick={handleDayClick}
+          darkMode={darkMode}
+        />
       </main>
 
       {/* Day events sheet */}

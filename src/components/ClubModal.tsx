@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { Users, Bell, BellOff, Calendar } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 import { Club } from '../types';
 import { Modal } from './ui/Modal';
 import { Button } from './ui/Button';
@@ -26,6 +28,8 @@ export function ClubModal({
   onViewEvents
 }: ClubModalProps) {
   if (!club) return null;
+
+  const [showQr, setShowQr] = useState(false);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="md">
@@ -115,6 +119,34 @@ export function ClubModal({
                 </>
               )}
             </button>
+          )}
+
+          {/* QR code toggle */}
+          <Button
+            variant="ghost"
+            size="lg"
+            fullWidth
+            onClick={() => setShowQr((prev) => !prev)}
+          >
+            {showQr ? 'Hide QR Code' : 'Show QR Code'}
+          </Button>
+
+          {showQr && (
+            <div className="flex flex-col items-center gap-2 pt-1">
+              <div className="p-3 rounded-2xl bg-dark-800 border border-white/10">
+                <QRCodeCanvas
+                  value={`eventradar://club/${club.id}`}
+                  size={160}
+                  bgColor="#020617"
+                  fgColor="#ffffff"
+                  level="M"
+                  includeMargin={false}
+                />
+              </div>
+              <p className="text-[11px] text-gray-500 text-center">
+                Scan to open {club.name} in Event Radar
+              </p>
+            </div>
           )}
         </div>
       </div>

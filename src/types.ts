@@ -19,6 +19,7 @@ export interface Event {
   attendees: number;
   tags: string[];
   description: string;
+  category: string;
 }
 
 export interface Club {
@@ -26,7 +27,7 @@ export interface Club {
   name: string;
   logo: string;
   color: string;
-  members: number;
+  memberCount: number;
   description: string;
   category: string;
 }
