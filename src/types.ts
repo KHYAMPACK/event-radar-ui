@@ -34,7 +34,7 @@ export interface Club {
 
 export interface Notification {
   id: string;
-  type: 'new_event' | 'event_reminder' | 'club_announcement' | 'event_update';
+  type: 'new_event' | 'event_reminder' | 'club_announcement' | 'event_update' | 'admin';
   clubId?: string;
   eventId?: string;
   title: string;

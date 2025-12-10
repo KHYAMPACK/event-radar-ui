@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Plus, Music, PartyPopper, Palette, Briefcase, Tv, Users as UsersIcon, Mic2, BookOpen } from 'lucide-react';
 import { Event } from '../types';
 import { getDaysInMonth, formatDate, isSameDay, isToday, getMonthName } from '../utils/dateUtils';
 import { motion } from 'motion/react';
@@ -34,16 +34,33 @@ export function CalendarGrid({ savedEvents, clubs, onDayClick, darkMode = true }
     return savedEvents.filter(event => event.date === dateStr);
   };
 
-  const getClubsForDay = (date: Date): Club[] => {
-    const dayEvents = getEventsForDay(date);
-    const ids = new Set(dayEvents.map(e => e.clubId));
-    return clubs.filter(c => ids.has(c.id));
-  };
-
   const getTopEventForDay = (date: Date): Event | null => {
     const dayEvents = getEventsForDay(date);
     if (dayEvents.length === 0) return null;
     return dayEvents.reduce((top, ev) => (ev.attendees > top.attendees ? ev : top), dayEvents[0]);
+  };
+
+  const getEventIcon = (event: Event) => {
+    const category = (event.category || '').toLowerCase();
+
+    if (category.includes('music') || category.includes('concert')) return <Music className="w-4 h-4 text-neon-purple" />;
+    if (category.includes('party') || category.includes('dance') || category.includes('night')) return <PartyPopper className="w-4 h-4 text-pink-400" />;
+    if (category.includes('sport') || category.includes('game') || category.includes('tournament')) return <UsersIcon className="w-4 h-4 text-emerald-400" />;
+    if (category.includes('workshop') || category.includes('hackathon')) return <Briefcase className="w-4 h-4 text-yellow-400" />;
+    if (category.includes('seminar') || category.includes('talk') || category.includes('lecture')) return <BookOpen className="w-4 h-4 text-sky-400" />;
+    if (category.includes('art') || category.includes('exhibit')) return <Palette className="w-4 h-4 text-rose-300" />;
+    if (category.includes('career') || category.includes('job') || category.includes('network')) return <Briefcase className="w-4 h-4 text-amber-300" />;
+    if (category.includes('film') || category.includes('movie')) return <Tv className="w-4 h-4 text-indigo-300" />;
+    if (category.includes('social') || category.includes('club')) return <UsersIcon className="w-4 h-4 text-cyan-300" />;
+
+    // default icon
+    return <Mic2 className="w-4 h-4 text-neon-blue" />;
+  };
+
+  const getClubsForDay = (date: Date): Club[] => {
+    const dayEvents = getEventsForDay(date);
+    const ids = new Set(dayEvents.map(e => e.clubId));
+    return clubs.filter(c => ids.has(c.id));
   };
 
   const isCurrentMonth = (date: Date): boolean => {
@@ -113,7 +130,6 @@ export function CalendarGrid({ savedEvents, clubs, onDayClick, darkMode = true }
             const isCurrentMonthDay = isCurrentMonth(day);
             const isTodayDay = isToday(day);
             const topEvent = getTopEventForDay(day);
-            const topClub = topEvent ? clubs.find(c => c.id === topEvent.clubId) ?? null : null;
             const hasMultipleEvents = dayEvents.length > 1;
 
             return (
@@ -150,16 +166,15 @@ export function CalendarGrid({ savedEvents, clubs, onDayClick, darkMode = true }
                   </span>
                 </div>
 
-                {/* Top club logo + plus indicator if multiple events */}
-                {hasEvents && isCurrentMonthDay && topClub && (
+                {/* Top event category icon + plus indicator if multiple events */}
+                {hasEvents && isCurrentMonthDay && topEvent && (
                   <div className="flex-1 flex items-center justify-center relative z-10">
                     <div className="flex items-center gap-1 max-h-10 overflow-hidden">
                       <span
-                        className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] bg-dark-900/60 shadow-sm"
-                        style={{ border: `1px solid ${topClub.color}66` }}
+                        className="w-7 h-7 rounded-full flex items-center justify-center bg-dark-900/60 shadow-sm border border-white/10"
                         aria-hidden="true"
                       >
-                        {topClub.logo}
+                        {getEventIcon(topEvent)}
                       </span>
                       {hasMultipleEvents && (
                         <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-dark-900/70 border border-white/10 text-[10px] text-gray-300">
@@ -170,8 +185,8 @@ export function CalendarGrid({ savedEvents, clubs, onDayClick, darkMode = true }
                   </div>
                 )}
 
-                {/* fallback tiny dots if there are events but no clubs found (should be rare) */}
-                {hasEvents && isCurrentMonthDay && (!topClub || dayClubs.length === 0) && (
+                {/* fallback tiny dots if somehow we have events but no top event (should not happen) */}
+                {hasEvents && isCurrentMonthDay && !topEvent && (
                   <div className="flex items-center justify-center gap-0.5" aria-hidden="true">
                     {dayEvents.slice(0, 3).map((_, i) => (
                       <div

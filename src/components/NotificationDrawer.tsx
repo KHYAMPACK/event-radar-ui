@@ -1,4 +1,4 @@
-import { X, Calendar, Megaphone, Bell, AlertCircle } from 'lucide-react';
+import { X, Calendar, Megaphone, Bell, AlertCircle, ShieldAlert } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Notification, Club } from '../types';
 
@@ -33,6 +33,8 @@ export function NotificationDrawer({
         return <Megaphone className="w-5 h-5" strokeWidth={2} />;
       case 'event_update':
         return <AlertCircle className="w-5 h-5" strokeWidth={2} />;
+      case 'admin':
+        return <ShieldAlert className="w-5 h-5" strokeWidth={2} />;
       default:
         return <Bell className="w-5 h-5" strokeWidth={2} />;
     }
@@ -48,6 +50,8 @@ export function NotificationDrawer({
         return 'text-neon-cyan';
       case 'event_update':
         return 'text-yellow-400';
+      case 'admin':
+        return 'text-red-400';
       default:
         return 'text-gray-400';
     }
@@ -154,9 +158,13 @@ export function NotificationDrawer({
                           onNotificationClick(notification);
                         }}
                         className={`w-full p-4 rounded-2xl border transition-all text-left focus:outline-none focus:ring-2 focus:ring-neon-blue ${
-                          notification.read
-                            ? 'bg-dark-700/30 border-white/5 hover:bg-dark-700/50'
-                            : 'bg-dark-700/60 border-neon-blue/20 hover:bg-dark-700/80 shadow-lg shadow-neon-blue/5'
+                          notification.type === 'admin'
+                            ? notification.read
+                              ? 'bg-red-950/40 border-red-500/30 hover:bg-red-950/60'
+                              : 'bg-red-950/60 border-red-500/60 hover:bg-red-900/80 shadow-lg shadow-red-500/20'
+                            : notification.read
+                              ? 'bg-dark-700/30 border-white/5 hover:bg-dark-700/50'
+                              : 'bg-dark-700/60 border-neon-blue/20 hover:bg-dark-700/80 shadow-lg shadow-neon-blue/5'
                         }`}
                       >
                         <div className="flex gap-3">
@@ -168,9 +176,16 @@ export function NotificationDrawer({
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex items-start justify-between gap-2 mb-1">
-                              <h3 className={`text-sm ${notification.read ? 'text-gray-400' : 'text-white'}`}>
-                                {notification.title}
-                              </h3>
+                              <div className="flex items-center gap-2">
+                                {notification.type === 'admin' && (
+                                  <span className="px-2 py-0.5 rounded-full bg-red-500/15 border border-red-500/60 text-[11px] font-medium uppercase tracking-wide text-red-300 flex-shrink-0">
+                                    Admin
+                                  </span>
+                                )}
+                                <h3 className={`text-sm ${notification.read ? 'text-gray-400' : 'text-white'}`}>
+                                  {notification.title}
+                                </h3>
+                              </div>
                               {!notification.read && (
                                 <span className="w-2 h-2 bg-neon-blue rounded-full flex-shrink-0 mt-1" aria-label="Unread" />
                               )}
@@ -181,6 +196,12 @@ export function NotificationDrawer({
                             
                             {/* Footer */}
                             <div className="flex items-center gap-2 text-xs text-gray-600">
+                              {notification.type === 'admin' && (
+                                <>
+                                  <span className="text-red-400">System</span>
+                                  <span>•</span>
+                                </>
+                              )}
                               {club && (
                                 <>
                                   <span aria-hidden="true">{club.logo}</span>

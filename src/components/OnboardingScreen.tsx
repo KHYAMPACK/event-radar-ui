@@ -58,9 +58,9 @@ export function OnboardingScreen({ onContinue, darkMode = true }: OnboardingScre
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.6 }}
-          className="text-5xl mb-4 bg-gradient-to-r from-white via-neon-blue to-neon-purple bg-clip-text text-transparent"
+          className="text-5xl mb-2 bg-gradient-to-r from-white via-neon-blue to-neon-purple bg-clip-text text-transparent"
         >
-          Event Radar
+          MES
         </motion.h1>
 
         {/* Subtitle */}
@@ -70,7 +70,7 @@ export function OnboardingScreen({ onContinue, darkMode = true }: OnboardingScre
           transition={{ delay: 0.5, duration: 0.6 }}
           className="text-gray-400 text-lg max-w-sm"
         >
-          Find events around your campus instantly.
+          mett & Event System for Bilkent
         </motion.p>
 
         {/* Features list */}
