@@ -70,7 +70,7 @@ export function OnboardingScreen({ onContinue, darkMode = true }: OnboardingScre
           transition={{ delay: 0.5, duration: 0.6 }}
           className="text-gray-400 text-lg max-w-sm"
         >
-          mett & Event System for Bilkent
+          Meet&Event System for Bilkent
         </motion.p>
 
         {/* Features list */}
