@@ -408,7 +408,15 @@ export default function App() {
   };
 
   const handleBackToHome = () => {
-    navigate(-1);
+    // If there is navigation history within the app, go back; otherwise go to home.
+    const historyState = window.history.state as { idx?: number } | null;
+    const hasInternalHistory = historyState && typeof historyState.idx === 'number' && historyState.idx > 0;
+
+    if (hasInternalHistory) {
+      navigate(-1);
+    } else {
+      navigate('/');
+    }
   };
 
   // Event save handlers
